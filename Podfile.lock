@@ -1,0 +1,10 @@
+PODS:
+  - ArcGIS-Runtime-SDK-iOS (10.2.5)
+
+DEPENDENCIES:
+  - ArcGIS-Runtime-SDK-iOS
+
+SPEC CHECKSUMS:
+  ArcGIS-Runtime-SDK-iOS: 0d62980b8ed60c1ee8ca292c1c644e74e0e922aa
+
+COCOAPODS: 0.39.0
