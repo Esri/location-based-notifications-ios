@@ -14,6 +14,7 @@
 		0F7770891C864BFC0025057F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F7770871C864BFC0025057F /* Main.storyboard */; };
 		0F77708B1C864BFC0025057F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F77708A1C864BFC0025057F /* Assets.xcassets */; };
 		0F77708E1C864BFC0025057F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F77708C1C864BFC0025057F /* LaunchScreen.storyboard */; };
+		0F7770961C89093A0025057F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7770951C89093A0025057F /* CoreLocation.framework */; };
 		C52F8F542A2DE0C7430D7232 /* libPods-GeofencingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C76F14FB6ADB3FD207B7D322 /* libPods-GeofencingDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		0F77708A1C864BFC0025057F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0F77708D1C864BFC0025057F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0F77708F1C864BFC0025057F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0F7770951C89093A0025057F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		83D53C6C112D520B495F085D /* Pods-GeofencingDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeofencingDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-GeofencingDemo/Pods-GeofencingDemo.release.xcconfig"; sourceTree = "<group>"; };
 		A5254FAC71427A025E606F2B /* Pods-GeofencingDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeofencingDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GeofencingDemo/Pods-GeofencingDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		C76F14FB6ADB3FD207B7D322 /* libPods-GeofencingDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeofencingDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F7770961C89093A0025057F /* CoreLocation.framework in Frameworks */,
 				C52F8F542A2DE0C7430D7232 /* libPods-GeofencingDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,6 +97,7 @@
 		6791D9F9D03BF22135A519A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0F7770951C89093A0025057F /* CoreLocation.framework */,
 				C76F14FB6ADB3FD207B7D322 /* libPods-GeofencingDemo.a */,
 			);
 			name = Frameworks;
@@ -142,6 +146,11 @@
 				TargetAttributes = {
 					0F7770771C864BFC0025057F = {
 						CreatedOnToolsVersion = 7.1.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
