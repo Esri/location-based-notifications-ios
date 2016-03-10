@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Creating Location-Based Apps with ArcGIS Online</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/esri-dev-summit-2016.css" id="theme">
+		<link rel="stylesheet" href="lib/css/solarized_dark.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-background="img/title.png" data-background-size="cover">
+					<h1>Building<br>Location-Aware Apps</h1>
+					<h3>with ArcGIS</h3>
+					<p>
+						<small><a href="http://aaronparecki.com">Aaron Parecki</a> / <a href="http://twitter.com/aaronpk">@aaronpk</a></small>
+					</p>
+				</section>
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>Overview</h2>
+					<ul>
+						<li class="fragment">Using ArcGIS Online to configure notifications</li>
+						<li class="fragment">Using the ArcGIS Offline SDK to sync the messages to the device</li>
+						<li class="fragment">Using the native iOS geofencing APIs to deliver notifications</li>
+					</ul>
+				</section>
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>Limitations</h2>
+					<ul>
+						<li class="fragment">iOS and Android native APIs do not support polygons</li>
+						<li class="fragment">Both platforms limit the number of active regions that can be monitored at a given time</li>
+						<li class="fragment">GPS in the real world is not perfect, so be prepared for weird errors</li>
+					</ul>
+				</section>
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>Limited number of regions</h2>
+
+					<p class="fragment">Android's limit is 100 regions, iPhone is 20.</p>
+
+					<p class="fragment">If your data set has more places than the limit,</p>
+
+					<p class="fragment">you'll need to proactively register and un-register regions as the user moves around.</p>
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Let's get started</h2>
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>developers.arcgis.com</h2>
+				  <img src="img/1-developer-site.png" class="stretch">					
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>My Hosted Data</h2>
+				  <img src="img/2-my-hosted-data.png" class="stretch">					
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Create New Feature Service</h2>
+				  <img src="img/3-new-feature-service.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Define Fields</h2>
+					<img src="img/4-define-fields.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Service is Created</h2>
+					<img src="img/6-feature-service-created.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Edit in ArcGIS Online</h2>
+					<img src="img/7-edit-in-arcgis-online.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Click "Edit"</h2>
+					<img src="img/8-click-edit.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Draw polygons and set notification text</h2>
+					<img src="img/9-draw-polygons.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Show Item Details</h2>
+					<img src="img/10-show-item-details.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Item Details</h2>
+					<img src="img/11-item-details.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Share item with "public"</h2>
+					<img src="img/12-share-item-public.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Enable Sync</h2>
+					<img src="img/13-enable-sync.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Click the service URL</h2>
+					<img src="img/14-get-service-url.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Feature Service</h2>
+					<img src="img/15-feature-service.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Get Feature Service Link</h2>
+					<img src="img/16-get-feature-service-link.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>iOS App</h2>
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Required Background Modes</h2>
+					<img src="img/required-background-modes.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Location Usage Description</h2>
+					<img src="img/location-usage-description.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Request Permission</h2>
+					<img src="img/request-permission.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Add Feature Service URL to App</h2>
+					<img src="img/17-add-feature-service-url-to-app.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Create GeoDatabase Task</h2>
+					<img src="img/create-geodatabase-task.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Start Syncing GeoDatabase</h2>
+					<img src="img/start-loading-features.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Query GeoDatabase for Features</h2>
+					<img src="img/query-geodatabase-for-features.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>addGeofenceForFeature</h2>
+					<img src="img/addGeofenceForFeature.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Find the center of the polygon</h2>
+					<img src="img/find-center-of-polygon.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Find the corner of the envelope</h2>
+					<img src="img/find-corner-of-envelope.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Find the distance from center to corner in meters</h2>
+					<img src="img/find-distance-in-meters.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Create a CLRegion</h2>
+					<img src="img/create-clregion.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Start Monitoring the CLRegion</h2>
+					<img src="img/start-monitoring-clregion.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<img src="img/trigger-animation.gif" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h3>locationManager:didEnterRegion:</h3>
+					<h4>called when the phone enters the region</h4>
+					<img src="img/did-enter-region.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<img src="img/iphone-location-prompt.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<img src="img/iphone-notification-prompt.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<img src="img/local-notification.png" class="stretch">
+				</section>
+
+				<section data-background="img/bg-7.png" data-background-size="cover">
+					<h2>Longer tutorial:</h2>
+					<p><a href="https://www.raywenderlich.com/95014/geofencing-ios-swift">https://www.raywenderlich.com/95014/geofencing-ios-swift</a></p>
+				</section>
+
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>More than 20 regions?</h2>
+					<p>What do you do if you have more than 20 regions you want to monitor?</p>
+				</section>
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>Register only the nearest 20</h2>
+					<ul>
+						<li class="fragment">Find the user's location</li>
+						<li class="fragment">Find the nearest 20 notifications</li>
+						<li class="fragment">Register CLRegions for each</li>
+					</ul>
+				</section>
+
+				<section data-background="img/bg-5.png" data-background-size="cover">
+					<h2>Update the nearest 20 when the user moves</h2>
+					<ul>
+						<li class="fragment">Register for "significant change" location updates</li>
+						<li class="fragment">Find the nearest 20 notifications</li>
+						<li class="fragment">Register CLRegions for each</li>
+					</ul>
+				</section>
+
+
+
+				<section data-background="img/end.png" data-background-size="cover"></section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
