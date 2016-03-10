@@ -41,6 +41,7 @@
     };
     
     NSLog(@"Monitored Regions: %@", self.locationManager.monitoredRegions);
+    NSLog(@"Authorization Status: %@", (CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ? @"always" : @"disabled"));
 }
 
 - (CLLocationManager *)locationManager {
@@ -155,6 +156,14 @@
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.alertBody = message;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    NSLog(@"Location Manager Failed: %@", error);
+}
+
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
+    NSLog(@"Monitoring region failed: %@", error);
 }
 
 - (void)didReceiveMemoryWarning {
