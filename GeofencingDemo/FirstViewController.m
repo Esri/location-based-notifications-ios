@@ -9,8 +9,7 @@
 #import "FirstViewController.h"
 #import <ArcGIS/ArcGIS.h>
 
-#define kFeatureServiceURL @"http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Sample_Triggers_for_Devsummit/FeatureServer"
-//#define kFeatureServiceURL @"https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer"
+#define kFeatureServiceURL @"http://services.arcgis.com/rOo16HdIMeOBI4Mb/ArcGIS/rest/services/Sample_Triggers/FeatureServer"
 
 @interface FirstViewController ()
 
@@ -25,14 +24,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Need to run this to request authorization from the user.
+    // Request authorization to monitor the phone's location from the user
     [self.locationManager requestAlwaysAuthorization];
 
-    // Request permissions to send notifications
-    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil];
+    // Request permission to send notifications
+    UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
+                                                                               categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
 
-    // Create the Geodatabase Task pointing to the feature service URL
+    // Create the Geodatabase Task referencing the feature service URL
     self.gdbTask = [[AGSGDBSyncTask alloc] initWithURL:[NSURL URLWithString:kFeatureServiceURL]];
 
     self.gdbTask.loadCompletion = ^(NSError* error){
@@ -57,40 +57,28 @@
     return _locationManager;
 }
 
+
+
 - (void)startLoadingFeatures {
-    // Generate the sync task parameters
-    AGSGDBGenerateParameters *params = [[AGSGDBGenerateParameters alloc] initWithFeatureServiceInfo:self.gdbTask.featureServiceInfo];
-    
-    // Palm Springs
-    // NW 33.829191, -116.547623
-    // SE 33.820457, -116.533533
-    
-    // params.extent = [AGSEnvelope envelopeWithXmin:-116.547623 ymin:33.820457 xmax:-116.533533 ymax:33.829191 spatialReference:[AGSSpatialReference wgs84SpatialReference]];
-    
-    // NSMutableArray* layers = [[NSMutableArray alloc] init];
-    // for (AGSMapServiceLayerInfo* layerInfo in self.gdbTask.featureServiceInfo.layerInfos) {
-    //    NSLog(@"Found layer ID: %lu", (unsigned long)layerInfo.layerId);
-    //    [layers addObject:[NSNumber numberWithInt: (int)layerInfo.layerId]];
-    // }
-    // params.layerIDs = layers;
-    
-    // Generate a geodatabase on the device with the parameters above, which starts the sync
+    // For the simulator, use a fixed path on your computer. For a device, set to nil.
     // NSString *path = @"/Users/aaronpk/test";
     NSString *path = nil;
-    [self.gdbTask generateGeodatabaseWithParameters:nil downloadFolderPath:path useExisting:YES status:^(AGSResumableTaskJobStatus status, NSDictionary *userInfo) {
+    [self.gdbTask generateGeodatabaseWithParameters:nil
+                                 downloadFolderPath:path
+                                        useExisting:YES
+                                             status:^(AGSResumableTaskJobStatus status, NSDictionary *userInfo) {
         NSLog(@"Sync Status: %@", AGSResumableTaskJobStatusAsString(status));
     } completion:^(AGSGDBGeodatabase *geodatabase, NSError *error) {
         self.geodatabase = geodatabase;
         NSLog(@"Sync complete. Error: %@", error);
-        //NSLog(@"Found table: %@", self.geodatabase);
-        [self.locationManager startUpdatingLocation];
         [self findFeaturesInTable];
     }];
+    
 }
 
 - (void)findFeaturesInTable {
     AGSQuery *query = [AGSQuery new];
-    query.whereClause = @"1=1"; // Return all features
+    query.whereClause = @"1=1"; // Return all features. If you have more than 20, return the nearest 20 instead.
     for (AGSFeatureTable* featureTable in self.geodatabase.featureTables) {
         NSLog(@"Querying table for features");
         [featureTable queryResultsWithParameters:query completion:^(NSArray *results, NSError *error) {
@@ -114,7 +102,6 @@
 }
 
 - (void)addGeofenceForFeature:(AGSGDBFeature *)feature {
-    //NSLog(@"%@", feature);
     NSLog(@"Processing feature: %lld %@", feature.objectID, [feature attributeAsStringForKey:@"Name"]);
     
     AGSGeometryEngine *geo = [AGSGeometryEngine defaultGeometryEngine];
@@ -132,12 +119,17 @@
     NSLog(@"Corner: %@", [corner encodeToJSON]);
     
     // Find the distance between the center and the corner of the envelope
-    AGSGeodesicDistanceResult *distance = [geo geodesicDistanceBetweenPoint1:center point2:corner inUnit:AGSSRUnitMeter];
+    AGSGeodesicDistanceResult *distance = [geo geodesicDistanceBetweenPoint1:center
+                                                                      point2:corner
+                                                                      inUnit:AGSSRUnitMeter];
     NSLog(@"Distance: %f", distance.distance);
     
-    // Create a CLRegion
+    // Create a CLRegion using the center point and distance
+    NSString *objectID = [NSString stringWithFormat:@"%lld",feature.objectID];
     CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(center.y, center.x);
-    CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:coord radius:distance.distance identifier:[NSString stringWithFormat:@"%lld",feature.objectID]];
+    CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:coord
+                                                                 radius:distance.distance
+                                                             identifier:objectID];
     
     [self.locationManager startMonitoringForRegion:region];
     
@@ -147,7 +139,11 @@
     NSLog(@"Entered region: %@", region);
     [self findFeatureId:region.identifier completion:^(AGSGDBFeature *feature) {
         NSLog(@"Found Feature: %@", feature);
-        [self notify:[feature attributeAsStringForKey:@"Notification"]];
+
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.alertBody = [feature attributeAsStringForKey:@"Notification"];
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+
     }];
 }
 
